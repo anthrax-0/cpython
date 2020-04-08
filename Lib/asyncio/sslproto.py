@@ -487,9 +487,9 @@ class SSLProtocol(protocols.Protocol):
         meaning a regular EOF is received or the connection was
         aborted or closed).
         """
+        self._loop.call_soon(self._app_protocol.connection_lost, exc)
         if self._session_established:
             self._session_established = False
-            self._loop.call_soon(self._app_protocol.connection_lost, exc)
         else:
             # Most likely an exception occurred while in SSL handshake.
             # Just mark the app transport as closed so that its __del__
